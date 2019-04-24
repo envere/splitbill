@@ -1,5 +1,6 @@
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.ArrayList;
 
 class Bill {
 
@@ -9,6 +10,8 @@ class Bill {
     private Queue<Orders> calculated = new LinkedList<>();
     private double delivery;
     private double promo;
+    private double discountedTotal = 0;
+    private ArrayList<Orders> debtList = new ArrayList<>();
 
     public Bill(double delivery, double promo) {
         this.delivery = delivery;
@@ -27,13 +30,18 @@ class Bill {
             Orders order = ordersList.poll();
             double newPrice = (order.getPrice() / totalPrice) *
                 discountedPrice + delivery / numPeople;
+            discountedTotal += newPrice;
             calculated.add(new Orders(order.getName(), newPrice));
         }
     }
 
     public void print() {
         while (calculated.peek() != null) {
-            System.out.println(calculated.poll());
+            Orders order = calculated.poll();
+            System.out.println(order);
+            debtList.add(order);
         }
+        System.out.println("Total discounted price: " + 
+                String.format("%.2f", discountedTotal));
     }
 }
